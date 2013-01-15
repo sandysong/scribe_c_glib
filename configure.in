@@ -1,0 +1,32 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.59)
+AC_INIT(scribe_c_client, 0.1, songqi28@gmail.com)
+AC_CONFIG_SRCDIR([src/scribe.c])
+AM_CONFIG_HEADER([config.h])
+AM_INIT_AUTOMAKE(scribe_c_client, 0.1)
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_LIBTOOL
+
+CFLAGS="`echo \"[$]CFLAGS\" | perl -pe 's/-O\d+//g;'`"
+
+# Checks for libraries.
+PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.0], have_glib2=yes, have_glib2=no)
+PKG_CHECK_MODULES([GOBJECT], [gobject-2.0 >= 2.0], have_gobject2=yes, have_gobject2=no)
+AM_CONDITIONAL(WITH_C_GLIB, [test "$have_glib2" = "yes" -a "$have_gobject2" = "yes"])
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([netdb.h netinet/in.h stdlib.h string.h sys/socket.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_C_VOLATILE
+
+# Checks for library functions.
+AC_CHECK_FUNCS([gethostbyname memset socket strerror])
+AC_OUTPUT([Makefile
+		   scribe_c_glib.pc
+		   ])
